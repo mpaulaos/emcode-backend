@@ -15,6 +15,14 @@ app.use(cors()); // Enable CORS for all routes
 
 app.use(express.static(path.join(__dirname, '..', 'public')));  // serve /public directory as static files
 
+const topicRoutes = require('./routes/topicRoutes');
+
+app.use(topicRoutes);
+
+const lessonRoutes = require('./routes/lessonRoutes');
+
+app.use(lessonRoutes);
+
 /**
  * module.exports is a special object in Node.js that is used to export functions, objects, or values from a module so that they can be imported and used in other files. In this case, it exports the Express app instance, allowing it to be imported and used in the server.js file to start the server and define routes.
  */
