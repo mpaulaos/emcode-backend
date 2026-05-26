@@ -1,15 +1,10 @@
-/* *
-* This file is the entry point of the application. It sets up the Express server and listens on a specified port.It imports the Express app from the 'src/app.js' file and starts the server.
- */
-/* require is a built-in function in Node.js that is used to import modules, JSON, and local files. In this case, it is used to import the Express app from the 'src/app.js' file. */
 import env from './env';
 import app from './src/app';
-import db from './src/db';
+import db from './src/db/db';
+import { users } from "./src/db/schema";
 
 async function start() {
     try {
-        const res = await db.query('SELECT NOW()');
-        console.log('DB conectada:', res.rows[0].now);
     } catch (err) {
         console.error('Fallo al conectar DB:', err);
         process.exit(1);
@@ -21,8 +16,10 @@ async function start() {
 
 start();
 
-app.get('/', (req, res) => {
-    res.send('Express JS');
+app.get('/users', async (req, res) => {
+    const result = await db.select().from(users);
+    console.log(result);
+    res.send(result);
 });
 
 app.get('/about', (req, res) => {
