@@ -8,11 +8,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "typeRoots": [
-      "node_modules/custom-env/lib/types",
-      "node_modules/@types"
-    ]
+    "resolveJsonModule": true
   },
   "include": [
     "src/**/*",
