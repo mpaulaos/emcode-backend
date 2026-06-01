@@ -1,13 +1,15 @@
-const express = require('express');
-const router = express.Router();
+import { Router } from 'express';
+import { validateBody, validateParams } from '../middleware/validations';
+import { z } from 'zod';
 
-const timeLog = (req, res, next) => {
-    console.log('Time: ', Date.now())
-    next()
-}
-router.use(timeLog)
+import db from '../db/db';
+import { lessons } from "../db/schema";
+import e from 'cors';
+import { eq } from 'drizzle-orm';
 
-const lessons = [
+const router = Router();
+
+const lessonsList = [
     { id: 1, lessonName: 'Primera', type: 'Lección', status: 'completed' },
     { id: 2, lessonName: 'Segunda', type: 'Lección', status: 'finished' },
     { id: 3, lessonName: 'Tercera', type: 'Lección', status: 'finished' },
@@ -19,4 +21,4 @@ router.get('/lessons', (req, res) => {
     res.json(lessons)
 });
 
-module.exports = router;
+export default router;

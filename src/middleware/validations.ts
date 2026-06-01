@@ -1,0 +1,63 @@
+import  {Request, Response, NextFunction} from 'express'; 
+
+import {z} from 'zod'; 
+
+//
+export const validateBody = (schema: z.ZodTypeAny) => {
+    return (req: Request, res: Response, next: NextFunction)=>{
+        try{
+            const validateData = schema.parse(req.body);
+            req.body = validateData;
+            next(); 
+        }catch(error){
+            if(error instanceof z.ZodError){
+                return res.status(400).json({
+                    message: 'Validation failed',
+                    errors: error.issues
+                }); 
+            }
+            next(error); 
+        }
+    }
+
+}
+
+//
+export const validateParams = (schema: z.ZodTypeAny) => {
+
+    return (req: Request, res: Response, next: NextFunction)=>{
+        try{
+            schema.parse( req.params);
+            next(); 
+        }catch(error){
+            if(error instanceof z.ZodError){
+                return res.status(400).json({
+                    message: 'Invalid parameters',
+                    errors: error.issues
+                }); 
+            }
+            next(error); 
+        }
+    }
+}
+
+//
+export const validaQuery = (schema: z.ZodTypeAny) => {
+
+    return (req: Request, res: Response, next: NextFunction)=>{
+        try{
+            schema.parse( req.query);
+            next(); 
+        }catch(error){
+            if(error instanceof z.ZodError){
+                return res.status(400).json({
+                    message: 'Invalid query parameters',
+                    errors: error.issues
+                }); 
+            }
+            next(error); 
+        }
+    }
+}
+
+//

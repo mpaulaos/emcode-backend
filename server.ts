@@ -3,6 +3,13 @@ import app from './src/app';
 import db from './src/db/db';
 import { users } from "./src/db/schema";
 
+import topicRoutes from './src/routes/topicRoutes';
+import lessonRoutes from './src/routes/lessonRoutes';
+
+app.use('/api/topics', topicRoutes);
+
+app.use('/api/lessons', lessonRoutes);
+
 async function start() {
     try {
     } catch (err) {
