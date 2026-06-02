@@ -2,7 +2,6 @@
 import {env as loadEnv} from 'custom-env';
 import { z } from 'zod';
 
-
 process.env.APP_STAGE = process.env.APP_STAGE || 'dev';
 
 const isProduction = process.env.APP_STAGE === 'production';
@@ -34,6 +33,8 @@ const envSchema = z.object({
     JWT_EXPIRES_IN: z.string().default('1h'),
 
     BCRYPT_ROUNDS: z.coerce.number().positive().min(1).max(20).default(12),
+
+    CORS_ORIGIN: z.string().url().default('http://localhost:5173'),
 });
 
 export type Env = z.infer<typeof envSchema>;
