@@ -4,7 +4,6 @@ import { z } from 'zod';
 
 import db from '../db/db';
 import { lessons } from "../db/schema";
-import e from 'cors';
 import { eq } from 'drizzle-orm';
 
 const router = Router();

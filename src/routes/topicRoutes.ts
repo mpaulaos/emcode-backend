@@ -4,7 +4,6 @@ import { z } from 'zod';
 
 import db from '../db/db';
 import { topics } from "../db/schema";
-import e from 'cors';
 import { eq } from 'drizzle-orm';
 
 
