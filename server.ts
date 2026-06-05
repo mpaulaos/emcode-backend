@@ -4,12 +4,19 @@ import app from './src/app';
 import topicRoutes from './src/routes/topicRoutes';
 import lessonRoutes from './src/routes/lessonRoutes';
 import userRoutes from './src/routes/userRoutes';
+import courseRoutes from './src/routes/courseRoutes';
+import dashboardRoutes from './src/routes/dashboardRoutes';
+
 
 app.use('/api/topics', topicRoutes);
 
 app.use('/api/lessons', lessonRoutes);
 
+app.use('/api/courses', courseRoutes);
+
 app.use('/api/auth', userRoutes);
+
+app.use('/dashboard', dashboardRoutes);
 
 async function start() {
     try {
