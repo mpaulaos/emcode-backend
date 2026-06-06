@@ -8,10 +8,13 @@ import courseRoutes from './src/routes/courseRoutes';
 import dashboardRoutes from './src/routes/dashboardRoutes';
 
 
+import chatRoutes from './src/routes/chatRoutes';
+
 app.use('/api/topics', topicRoutes);
 
 app.use('/api/lessons', lessonRoutes);
 
+app.use('/api/chat', chatRoutes);
 app.use('/api/courses', courseRoutes);
 
 app.use('/api/auth', userRoutes);
