@@ -4,8 +4,8 @@ import { courses } from '../db/schema';
 type CoursePreview = {
     id: number;
     title: string;
-    subtitle: string;
-    description: string;
+    subtitle: string | null;
+    description: string | null;
     image: string | null;
 };
 
