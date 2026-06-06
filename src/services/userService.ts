@@ -33,7 +33,7 @@ class UserService {
             throw new Error('Credenciales inválidas');
         }
         const { passwordHash, ...userData } = user;
-        return userData;
+        return userData as typeof userData & { role: string | null };
     }
 }
 
