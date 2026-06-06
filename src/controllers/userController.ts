@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import UserService from '../services/userService';
+import { signToken } from '../utils/jwt';
 
 class UserController {
     private userService: UserService;
@@ -32,7 +33,14 @@ class UserController {
     login = async (req: Request, res: Response) => {
         try {
             const user = await this.userService.login(req.body);
-            res.json(user);
+            const token = signToken({
+                id: user.id,
+                email: user.email,
+                role: user.role ?? 'student',
+                firstName: user.firstName,
+                lastName: user.lastName,
+            });
+            res.json({ token, user });
         } catch (error) {
             if (error instanceof Error && error.message === 'Credenciales inválidas') {
                 return res.status(401).json({ message: 'Credenciales inválidas' });
