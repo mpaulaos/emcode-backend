@@ -34,6 +34,8 @@ const envSchema = z.object({
     JWT_EXPIRES_IN: z.string().default('1h'),
 
     BCRYPT_ROUNDS: z.coerce.number().positive().min(1).max(20).default(12),
+
+    GROQ_API_KEY: z.string().startsWith('gsk_'),
 });
 
 export type Env = z.infer<typeof envSchema>;

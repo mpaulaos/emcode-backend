@@ -6,9 +6,13 @@ import { users } from "./src/db/schema";
 import topicRoutes from './src/routes/topicRoutes';
 import lessonRoutes from './src/routes/lessonRoutes';
 
+import chatRoutes from './src/routes/chatRoutes';
+
 app.use('/api/topics', topicRoutes);
 
 app.use('/api/lessons', lessonRoutes);
+
+app.use('/api/chat', chatRoutes);
 
 async function start() {
     try {
