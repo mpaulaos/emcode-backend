@@ -36,6 +36,11 @@ const envSchema = z.object({
 
     GROQ_API_KEY: z.string().startsWith('gsk_'),
     CORS_ORIGIN: z.string().url().default('http://localhost:5173'),
+
+    GOOGLE_CLIENT_ID: z.string().min(1, 'GOOGLE_CLIENT_ID is required'),
+    GOOGLE_CLIENT_SECRET: z.string().min(1, 'GOOGLE_CLIENT_SECRET is required'),
+    FRONTEND_URL: z.string().url().default('http://localhost:5173'),
+    BACKEND_URL: z.string().url().default('http://localhost:3000'),
 });
 
 export type Env = z.infer<typeof envSchema>;

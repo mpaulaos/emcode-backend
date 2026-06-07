@@ -25,7 +25,7 @@ class UserService {
     async login(credentials: LoginDTO) {
         const { email, password } = credentials;
         const user = await this.userRepository.findByEmail(email);
-        if (!user) {
+        if (!user || !user.passwordHash) {
             throw new Error('Credenciales inválidas');
         }
         const valid = await bcrypt.compare(password, user.passwordHash);

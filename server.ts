@@ -1,3 +1,4 @@
+import cookieParser from 'cookie-parser';
 import env from './env';
 import app from './src/app';
 
@@ -9,6 +10,8 @@ import dashboardRoutes from './src/routes/dashboardRoutes';
 
 
 import chatRoutes from './src/routes/chatRoutes';
+
+app.use(cookieParser());
 
 app.use('/api/topics', topicRoutes);
 

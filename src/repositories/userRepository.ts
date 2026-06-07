@@ -6,10 +6,11 @@ type CreateUserData = {
     firstName: string;
     lastName: string;
     email: string;
-    passwordHash: string;
+    passwordHash?: string;
     phone?: string;
     profilePicture?: string;
     role?: 'admin' | 'teacher' | 'student';
+    isVerified?: boolean;
 };
 
 class UserRepository {
