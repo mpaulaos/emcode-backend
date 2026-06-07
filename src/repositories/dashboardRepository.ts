@@ -9,6 +9,7 @@ type CoursePreview = {
     image: string | null;
 };
 
+//
 class DashboardRepository {
     async getTeacherCourses(): Promise<CoursePreview[]> {
         return await db
