@@ -11,7 +11,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
 }));
-app.options('*', cors()); // Enable pre-flight for all routes
+app.options(/(.*)/, cors());
 app.use(express.static(path.join(__dirname, '..', 'public')));  // serve /public directory as static files
 
 // Limit request body size to 10MB to prevent abuse and handle large payloads (e.g., images)
