@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getChatReply } from "../services/openai";
+import { getChatReply } from "../services/groq";
 
 export async function sendMessage(req: Request, res: Response) {
   try {

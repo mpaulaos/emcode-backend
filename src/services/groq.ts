@@ -1,9 +1,8 @@
-import OpenAI from "openai";
+import Groq from "groq-sdk";
 import env from "../../env";
 
-const openai = new OpenAI({
+const groq = new Groq({
   apiKey: env.GROQ_API_KEY,
-  baseURL: "https://api.groq.com/openai/v1",
 });
 
 const SYSTEM_PROMPT = `Eres un asistente de Emcode, una plataforma educativa accesible para estudiantes con discapacidad visual.
@@ -14,7 +13,7 @@ Responde siempre en español y de forma concisa. Tu nombre es Gekobot.`;
 export async function getChatReply(
   messages: { role: "user" | "assistant"; content: string }[]
 ): Promise<string> {
-  const completion = await openai.chat.completions.create({
+  const completion = await groq.chat.completions.create({
     model: "llama-3.3-70b-versatile",
     max_tokens: 1000,
     messages: [
