@@ -1,4 +1,5 @@
-import { pgTable, serial, varchar, text, boolean, timestamp, integer  } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, text, boolean, timestamp, integer, AnyPgColumn  } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
 
 export const users = pgTable('users', {
     id: serial('id').primaryKey(),
@@ -44,6 +45,7 @@ export const topics = pgTable('topics', {
     id: serial('id').primaryKey(),
     courseId: integer('course_id').notNull().references(() => courses.id),
     topicName: varchar('topic_name', { length: 100 }).notNull(),
+    isVisible: boolean("is_visible").notNull().default(true),
     createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
     updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow(),
 });
@@ -53,7 +55,8 @@ export const lessons = pgTable('lessons', {
     id: serial('id').primaryKey(),
     topicId: integer('topic_id').notNull().references(() => topics.id),
     lessonName: varchar('lesson_name', { length: 100 }).notNull(),
-    lessonType: varchar('lesson_type', { length: 20 }).default('video').$type<'video' | 'text'>(),
+    lessonType: varchar('lesson_type', { length: 20 }).default('theory').$type<'theory' | 'practice'>(),
+    isVisible: boolean("is_visible").notNull().default(true),
     createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
     updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow(),
 }); 
@@ -66,3 +69,98 @@ export const slides = pgTable('slides', {
     createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
     updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow(),
 });
+
+export const posts = pgTable('posts', {
+    id: serial('id').primaryKey(),
+    courseId: integer('course_id').notNull().references(() => courses.id),
+    userId: integer('user_id').notNull().references(() => users.id),
+    parentPostId: integer('parent_post_id').references((): AnyPgColumn => posts.id),
+    content: varchar('content', { length: 500 }).notNull(),
+    createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
+    updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow(),
+});
+
+
+export const enrrollments = pgTable('enrrollments', {
+    id: serial('id').primaryKey(),
+    userId: integer('user_id').notNull().references(() => users.id),
+    courseId: integer('course_id').notNull().references(() => courses.id),
+    createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
+    updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow(),
+});
+
+export const student_progress = pgTable('student_progress', {
+    id: serial('id').primaryKey(),
+    userId: integer('user_id').notNull().references(() => users.id),
+    lessonId: integer('lesson_id').notNull().references(() => lessons.id),
+    isCompleted: boolean('is_completed').notNull().default(false),
+    createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
+    updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow(),
+});
+
+
+
+//relations
+export const userRelations = relations(users, ({ many }) => ({
+    courses: many(courses),
+    posts: many(posts),
+    enrrollments: many(enrrollments),
+    progress: many(student_progress),
+}));
+
+
+export const courseRelations = relations(courses, ({ one, many }) => ({
+    creator: one(users, {
+        fields: [courses.creatorId],
+        references: [users.id],
+    }),
+    topics: many(topics),
+    posts: many(posts),
+    enrrollments: many(enrrollments),
+}));
+
+export const topicRelations = relations(topics, ({ one, many }) => ({
+    course: one(courses, {
+        fields: [topics.courseId],
+        references: [courses.id],
+    }),
+    lessons: many(lessons),
+}));
+
+export const lessonRelations = relations(lessons, ({ one, many }) => ({
+    topic: one(topics, {
+        fields: [lessons.topicId],
+        references: [topics.id],
+    }),
+    slides: many(slides),
+    progress: many(student_progress),
+}));
+
+export const slideRelations = relations(slides, ({ one }) => ({
+    lesson: one(lessons, {
+        fields: [slides.lessonId],
+        references: [lessons.id],
+    }),
+}));
+
+export const postRelations = relations(posts, ({ one, many }) => ({
+    course: one(courses, {
+        fields: [posts.courseId],
+        references: [courses.id],
+    }),
+    user: one(users, {
+        fields: [posts.userId],
+        references: [users.id],
+    }),
+    parentPost: one(posts, {
+        fields: [posts.parentPostId],
+        references: [posts.id],
+        relationName: 'replies',
+    }),
+    replies: many(posts, {
+        relationName: 'parentPost',
+    }),
+}));
+
+
+

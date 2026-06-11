@@ -1,23 +1,16 @@
 import { Router } from 'express';
 import { validateBody, validateParams } from '../middleware/validations';
-import { z } from 'zod';
-
-import db from '../db/db';
-import { lessons } from "../db/schema";
-import { eq } from 'drizzle-orm';
+import { createLessonSchema, getLessonSchema, updateLessonSchema, topicIdParamSchema} from '../schemas/lessonSchema';
+import LessonController from '../controllers/lessonController';
 
 const router = Router();
+const lessonController = new LessonController();
 
-const lessonsList = [
-    { id: 1, lessonName: 'Primera', type: 'Lección', status: 'completed' },
-    { id: 2, lessonName: 'Segunda', type: 'Lección', status: 'finished' },
-    { id: 3, lessonName: 'Tercera', type: 'Lección', status: 'finished' },
-    { id: 4, lessonName: 'Cuarta', type: 'Lección', status: 'in-progress' },
-    { id: 5, lessonName: 'Quinta', type: 'Laboratorio', status: 'not-started' }
-]
-
-router.get('/lessons', (req, res) => {
-    res.json(lessons)
-});
+router.get('/', lessonController.getAll);
+router.get('/topic/:topicId', validateParams(topicIdParamSchema), lessonController.getByTopicId);
+router.get('/:id', validateParams(getLessonSchema), lessonController.getById);
+router.post('/topic/:topicId', validateParams(topicIdParamSchema), validateBody(createLessonSchema), lessonController.create);
+router.patch('/:id', validateParams(getLessonSchema), validateBody(updateLessonSchema), lessonController.update);
+router.delete('/:id', validateParams(getLessonSchema), lessonController.remove);
 
 export default router;
