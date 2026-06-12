@@ -100,6 +100,27 @@ export const student_progress = pgTable('student_progress', {
 
 
 
+export const guides = pgTable('guides', {
+    id: serial('id').primaryKey(),
+    slug: varchar('slug', { length: 100 }).notNull().unique(),
+    title: varchar('title', { length: 255 }).notNull(),
+    summary: text('summary').notNull(),
+    isVisible: boolean('is_visible').notNull().default(true),
+    createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
+    updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow(),
+});
+ 
+export const guideSections = pgTable('guide_sections', {
+    id: serial('id').primaryKey(),
+    guideId: integer('guide_id').notNull().references(() => guides.id, { onDelete: 'cascade' }),
+    order: integer('order').notNull(),
+    heading: varchar('heading', { length: 255 }).notNull(),
+    body: text('body').notNull(),
+    createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
+});
+
+
+
 //relations
 export const userRelations = relations(users, ({ many }) => ({
     courses: many(courses),
@@ -142,6 +163,23 @@ export const slideRelations = relations(slides, ({ one }) => ({
         references: [lessons.id],
     }),
 }));
+
+
+
+
+export const guideRelations = relations(guides, ({ many }) => ({
+    sections: many(guideSections),
+}));
+ 
+export const guideSectionRelations = relations(guideSections, ({ one }) => ({
+    guide: one(guides, {
+        fields: [guideSections.guideId],
+        references: [guides.id],
+    }),
+}));
+
+
+
 
 export const postRelations = relations(posts, ({ one, many }) => ({
     course: one(courses, {

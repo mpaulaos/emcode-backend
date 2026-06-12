@@ -10,6 +10,7 @@ import dashboardRoutes from './src/routes/dashboardRoutes';
 
 
 import chatRoutes from './src/routes/chatRoutes';
+import guideRoutes from './src/routes/guideRoutes';
 
 app.use(cookieParser());
 
@@ -23,6 +24,8 @@ app.use('/api/courses', courseRoutes);
 app.use('/api/auth', userRoutes);
 
 app.use('/dashboard', dashboardRoutes);
+
+app.use('/api/guides', guideRoutes);
 
 async function start() {
     try {
