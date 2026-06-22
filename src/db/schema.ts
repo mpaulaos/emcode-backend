@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, text, boolean, timestamp, integer, AnyPgColumn  } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, text, boolean, timestamp, integer, AnyPgColumn, jsonb  } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 export const users = pgTable('users', {
@@ -64,8 +64,13 @@ export const lessons = pgTable('lessons', {
 
 export const slides = pgTable('slides', {
     id: serial('id').primaryKey(),
-    lessonId: integer('lesson_id').notNull().references(() => lessons.id),
-    content: text('content').notNull(),
+    lessonId: integer('lesson_id').notNull().references(() => lessons.id, { onDelete: 'cascade' }),
+    slideType: varchar('slide_type', { length: 30 }).notNull(), // 'text' | 'text_image' | 'single_choice' | 'multiple_choice' | 'fill_blank'
+    order: integer('order').notNull(),
+    text: text('text'),
+    imageUrl: text('image_url'),
+    imageAlt: text('image_alt'),
+    practiceContent: jsonb('practice_content'),
     createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
     updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow(),
 });
