@@ -125,6 +125,20 @@ export const guideSections = pgTable('guide_sections', {
 });
 
 
+export const disabilities = pgTable('disabilities', {
+    id: serial('id').primaryKey(),
+    name: varchar('name', { length: 150 }).notNull(),
+    createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
+    updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow(),
+});
+
+export const student_disabilities = pgTable('student_disabilities', {
+    id: serial('id').primaryKey(),
+    userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+    disabilityId: integer('disability_id').notNull().references(() => disabilities.id, { onDelete: 'cascade' }),
+});
+
+
 
 //relations
 export const userRelations = relations(users, ({ many }) => ({

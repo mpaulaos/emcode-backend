@@ -11,6 +11,7 @@ import dashboardRoutes from './src/routes/dashboardRoutes';
 
 import chatRoutes from './src/routes/chatRoutes';
 import guideRoutes from './src/routes/guideRoutes';
+import studentRoutes from './src/routes/studentRoutes';
 
 app.use(cookieParser());
 
@@ -26,6 +27,7 @@ app.use('/api/auth', userRoutes);
 app.use('/dashboard', dashboardRoutes);
 
 app.use('/api/guides', guideRoutes);
+app.use('/api/students', studentRoutes);
 
 async function start() {
     try {
