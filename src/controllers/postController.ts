@@ -13,6 +13,7 @@ class PostController {
             const posts = await this.postService.getByCourseId(Number(req.params.courseId));
             res.json(posts);
         } catch (error) {
+            console.error('[getByCourseId]', error);
             res.status(500).json({ message: 'Error interno del servidor' });
         }
     };
@@ -25,6 +26,7 @@ class PostController {
             }
             res.json(post);
         } catch (error) {
+            console.error('[getById]', error);
             res.status(500).json({ message: 'Error interno del servidor' });
         }
     };
@@ -36,6 +38,7 @@ class PostController {
             const post = await this.postService.create(courseId, userId, req.body.content);
             res.status(201).json(post);
         } catch (error) {
+            console.error('[create]', error);
             res.status(500).json({ message: 'Error interno del servidor' });
         }
     };
@@ -50,6 +53,7 @@ class PostController {
             if (error instanceof Error && error.message === 'Post no encontrado') {
                 return res.status(404).json({ message: error.message });
             }
+            console.error('[reply]', error);
             res.status(500).json({ message: 'Error interno del servidor' });
         }
     };
@@ -70,6 +74,7 @@ class PostController {
             if (error instanceof Error && error.message === 'Post no encontrado') {
                 return res.status(404).json({ message: error.message });
             }
+            console.error('[update]', error);
             res.status(500).json({ message: 'Error interno del servidor' });
         }
     };
@@ -91,6 +96,7 @@ class PostController {
             if (error instanceof Error && error.message === 'Post no encontrado') {
                 return res.status(404).json({ message: error.message });
             }
+            console.error('[remove]', error);
             res.status(500).json({ message: 'Error interno del servidor' });
         }
     };
