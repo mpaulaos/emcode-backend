@@ -81,6 +81,7 @@ export const posts = pgTable('posts', {
     userId: integer('user_id').notNull().references(() => users.id),
     parentPostId: integer('parent_post_id').references((): AnyPgColumn => posts.id),
     content: varchar('content', { length: 500 }).notNull(),
+    isDeleted: boolean('is_deleted').default(false),
     createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
     updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow(),
 });
