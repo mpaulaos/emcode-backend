@@ -12,6 +12,8 @@ import dashboardRoutes from './src/routes/dashboardRoutes';
 import chatRoutes from './src/routes/chatRoutes';
 import guideRoutes from './src/routes/guideRoutes';
 import slideRoutes from './src/routes/slideRoutes';
+import studentRoutes from './src/routes/studentRoutes';
+import postRoutes from './src/routes/postRoutes';
 
 app.use(cookieParser());
 
@@ -28,6 +30,8 @@ app.use('/dashboard', dashboardRoutes);
 
 app.use('/api/guides', guideRoutes);
 app.use('/api/slides', slideRoutes);
+app.use('/api/students', studentRoutes);
+app.use('/api/posts', postRoutes);
 
 async function start() {
     try {

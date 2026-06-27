@@ -81,6 +81,7 @@ export const posts = pgTable('posts', {
     userId: integer('user_id').notNull().references(() => users.id),
     parentPostId: integer('parent_post_id').references((): AnyPgColumn => posts.id),
     content: varchar('content', { length: 500 }).notNull(),
+    isDeleted: boolean('is_deleted').default(false),
     createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
     updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow(),
 });
@@ -122,6 +123,20 @@ export const guideSections = pgTable('guide_sections', {
     heading: varchar('heading', { length: 255 }).notNull(),
     body: text('body').notNull(),
     createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
+});
+
+
+export const disabilities = pgTable('disabilities', {
+    id: serial('id').primaryKey(),
+    name: varchar('name', { length: 150 }).notNull(),
+    createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
+    updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow(),
+});
+
+export const student_disabilities = pgTable('student_disabilities', {
+    id: serial('id').primaryKey(),
+    userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+    disabilityId: integer('disability_id').notNull().references(() => disabilities.id, { onDelete: 'cascade' }),
 });
 
 
