@@ -11,6 +11,7 @@ import dashboardRoutes from './src/routes/dashboardRoutes';
 
 import chatRoutes from './src/routes/chatRoutes';
 import guideRoutes from './src/routes/guideRoutes';
+import slideRoutes from './src/routes/slideRoutes';
 
 app.use(cookieParser());
 
@@ -26,6 +27,7 @@ app.use('/api/auth', userRoutes);
 app.use('/dashboard', dashboardRoutes);
 
 app.use('/api/guides', guideRoutes);
+app.use('/api/slides', slideRoutes);
 
 async function start() {
     try {
