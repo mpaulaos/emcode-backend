@@ -48,6 +48,52 @@ class UserController {
             res.status(500).json({ message: 'Error interno del servidor' });
         }
     };
+
+    getProfile = async (req: Request, res: Response) => {
+        try {
+            const user = await this.userService.getProfile(req.user!.id);
+            res.json(user);
+        } catch (error) {
+            if (error instanceof Error && error.message === 'Usuario no encontrado') {
+                return res.status(404).json({ message: 'Usuario no encontrado' });
+            }
+            res.status(500).json({ message: 'Error interno del servidor' });
+        }
+    };
+
+    updateProfile = async (req: Request, res: Response) => {
+        try {
+            const user = await this.userService.updateProfile(req.user!.id, req.body);
+            const token = signToken({
+                id: user.id,
+                email: user.email,
+                role: user.role ?? 'student',
+                firstName: user.firstName,
+                lastName: user.lastName,
+            });
+            res.json({ user, token });
+        } catch (error) {
+            if (error instanceof Error && error.message === 'Usuario no encontrado') {
+                return res.status(404).json({ message: 'Usuario no encontrado' });
+            }
+            res.status(500).json({ message: 'Error interno del servidor' });
+        }
+    };
+
+    changePassword = async (req: Request, res: Response) => {
+        try {
+            await this.userService.changePassword(req.user!.id, req.body);
+            res.json({ message: 'Contraseña actualizada exitosamente' });
+        } catch (error) {
+            if (error instanceof Error && error.message === 'Usuario no encontrado') {
+                return res.status(404).json({ message: 'Usuario no encontrado' });
+            }
+            if (error instanceof Error && error.message === 'Credenciales inválidas') {
+                return res.status(401).json({ message: 'La contraseña actual es incorrecta' });
+            }
+            res.status(500).json({ message: 'Error interno del servidor' });
+        }
+    };
 }
 
 export default UserController;

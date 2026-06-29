@@ -62,7 +62,8 @@ export async function handleCallback(code: string): Promise<{ token: string; use
     token,
     user: {
       id: user.id,
-      name: `${user.firstName} ${user.lastName}`,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       role: user.role ?? 'student',
     },
