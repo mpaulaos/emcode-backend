@@ -62,7 +62,7 @@ class StudentRepository {
 		const enrollmentRows = await db.select({ courseId: enrrollments.courseId }).from(enrrollments).where(eq(enrrollments.userId, id));
 		const courseIds = enrollmentRows.map((row) => row.courseId);
 		const userCourses = courseIds.length
-			? await db.select({ id: courses.id, title: courses.title }).from(courses).where(inArray(courses.id, courseIds))
+			? await db.select().from(courses).where(inArray(courses.id, courseIds))
 			: [];
 
 		const disabilityRows = await db
