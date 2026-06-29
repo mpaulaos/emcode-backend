@@ -185,8 +185,6 @@ export const slideRelations = relations(slides, ({ one }) => ({
 }));
 
 
-
-
 export const guideRelations = relations(guides, ({ many }) => ({
     sections: many(guideSections),
 }));
