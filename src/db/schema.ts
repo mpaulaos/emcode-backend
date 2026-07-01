@@ -104,6 +104,17 @@ export const student_progress = pgTable('student_progress', {
     updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow(),
 });
 
+export const quizAttempts = pgTable('quiz_attempts', {
+    id: serial('id').primaryKey(),
+    userId: integer('user_id').notNull().references(() => users.id),
+    lessonId: integer('lesson_id').notNull().references(() => lessons.id),
+    score: integer('score').notNull(),
+    correctCount: integer('correct_count').notNull(),
+    incorrectCount: integer('incorrect_count').notNull(),
+    totalQuestions: integer('total_questions').notNull(),
+    answers: jsonb('answers').notNull(),
+    createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
+});
 
 
 export const guides = pgTable('guides', {
@@ -147,6 +158,7 @@ export const userRelations = relations(users, ({ many }) => ({
     posts: many(posts),
     enrrollments: many(enrrollments),
     progress: many(student_progress),
+    quizAttempts: many(quizAttempts),
 }));
 
 
@@ -175,6 +187,18 @@ export const lessonRelations = relations(lessons, ({ one, many }) => ({
     }),
     slides: many(slides),
     progress: many(student_progress),
+    quizAttempts: many(quizAttempts),
+}));
+
+export const quizAttemptRelations = relations(quizAttempts, ({ one }) => ({
+    user: one(users, {
+        fields: [quizAttempts.userId],
+        references: [users.id],
+    }),
+    lesson: one(lessons, {
+        fields: [quizAttempts.lessonId],
+        references: [lessons.id],
+    }),
 }));
 
 export const slideRelations = relations(slides, ({ one }) => ({
