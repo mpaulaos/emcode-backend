@@ -789,5 +789,64 @@ export const courseData: CourseData = {
         },
       ],
     },
+    {
+      topicName: "Módulo 2: Control de flujo y colecciones",
+      lessons: [
+        {
+          lessonName: "Capítulo 1: Condicionales if, elif y else",
+          lessonType: "theory",
+          slides: [
+            {
+              text:
+                "Objetivos de aprendizaje\n\nAl finalizar este capítulo serás capaz de:\n\n• Tomar decisiones en tu código con condiciones.\n• Usar if, elif y else de forma clara.\n• Evaluar expresiones booleanas.\n• Combinar condiciones con and, or y not.",
+            },
+            {
+              text:
+                "1.1 Estructura básica\n\n  if condicion:\n      hacer_algo()\n  elif otra_condicion:\n      hacer_otro_cambio()\n  else:\n      ejecutar_alternativa()\n\nLas sentencias se evalúan en orden y solo una rama se ejecuta.",
+            },
+            {
+              text:
+                "1.2 Buenas prácticas\n\n• Mantén las condiciones simples y legibles.\n• Usa comparaciones claras: edad >= 18.\n• Evita anidar demasiados if.\n• Cuando sea posible, devuelve temprano o separa lógica en funciones.",
+            },
+          ],
+        },
+        {
+          lessonName: "Capítulo 2: Bucles for y while",
+          lessonType: "theory",
+          slides: [
+            {
+              text:
+                "Objetivos de aprendizaje\n\nAl finalizar este capítulo serás capaz de:\n\n• Repetir tareas con bucles.\n• Diferenciar entre for y while.\n• Controlar iteraciones con break y continue.\n• Evitar bucles infinitos.",
+            },
+            {
+              text:
+                "2.1 El bucle for\n\nfor elemento in secuencia:\n    print(elemento)\n\nEs ideal cuando conoces o puedes iterar sobre una colección.",
+            },
+            {
+              text:
+                "2.2 El bucle while\n\nwhile condicion:\n    hacer_algo()\n\nSe usa cuando la repetición depende de una condición dinámica.",
+            },
+          ],
+        },
+        {
+          lessonName: "Capítulo 3: Listas, tuplas, diccionarios y conjuntos",
+          lessonType: "theory",
+          slides: [
+            {
+              text:
+                "Objetivos de aprendizaje\n\nAl finalizar este capítulo serás capaz de:\n\n• Organizar datos con colecciones.\n• Elegir entre listas, tuplas, diccionarios y conjuntos.\n• Agregar, modificar y eliminar elementos.\n• Recorrer colecciones con métodos y bucles.",
+            },
+            {
+              text:
+                "3.1 Listas\n\nLas listas son mutables y muy comunes para almacenar datos en orden.\n\nfrutas = ['manzana', 'banana']\nfrutas.append('uva')",
+            },
+            {
+              text:
+                "3.2 Tuplas, diccionarios y conjuntos\n\n• Tuplas: inmutables y seguras.\n• Diccionarios: pares clave-valor.\n• Conjuntos: colecciones sin duplicados.\n\nEstas estructuras te ayudan a modelar información de distinta forma.",
+            },
+          ],
+        },
+      ],
+    },
   ],
 };
