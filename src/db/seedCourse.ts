@@ -1,4 +1,5 @@
 import "dotenv/config";
+import bcrypt from "bcrypt";
 import db from "./../db/db";
 import { users, courses, topics, lessons, slides, disabilities, student_disabilities } from "./schema";
 import { courseData } from "../types/courseData";
@@ -32,6 +33,7 @@ const seed = async () => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
+        passwordHash: bcrypt.hashSync("123456789", 10),
         role: user.role,
         isActive: true,
         isVerified: true,
