@@ -35,6 +35,7 @@ const envSchema = z.object({
     BCRYPT_ROUNDS: z.coerce.number().positive().min(1).max(20).default(12),
 
     GROQ_API_KEY: z.string().startsWith('gsk_'),
+    GROQ_VISION_API_KEY: z.string().startsWith('gsk_').optional(),
     CORS_ORIGIN: z.string().url().default('http://localhost:5173'),
 
     GOOGLE_CLIENT_ID: z.string().min(1, 'GOOGLE_CLIENT_ID is required'),

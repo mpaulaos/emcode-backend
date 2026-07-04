@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getChatReply } from "../services/groq";
+import { getChatReply, getImageDescription } from "../services/groq";
 
 export async function sendMessage(req: Request, res: Response) {
   try {
@@ -15,5 +15,18 @@ export async function sendMessage(req: Request, res: Response) {
   } catch (error) {
     console.error("Error Groq:", error);
     return res.status(500).json({ error: "Error interno del servidor" });
+  }
+}
+
+export async function describeImage(req: Request, res: Response) {
+  try {
+    const { image } = req.body;
+    const description = await getImageDescription(image);
+    return res.json({ description });
+  } catch (error) {
+    console.error("Error describiendo imagen:", error);
+    return res.status(500).json({
+      error: "No se pudo procesar la imagen. Intenta de nuevo.",
+    });
   }
 }
