@@ -1,6 +1,6 @@
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import db from '../db/db';
-import { users } from '../db/schema';
+import { users, disabilities, student_disabilities } from '../db/schema';
 
 type CreateUserData = {
     firstName: string;
@@ -39,6 +39,27 @@ class UserRepository {
     async create(data: CreateUserData) {
         const [newUser] = await db.insert(users).values(data).returning();
         return newUser;
+    }
+
+    async findDisabilities(userId: number) {
+        const rows = await db
+            .select({ id: disabilities.id, name: disabilities.name })
+            .from(student_disabilities)
+            .innerJoin(disabilities, eq(student_disabilities.disabilityId, disabilities.id))
+            .where(eq(student_disabilities.userId, userId));
+        return rows;
+    }
+
+    async setDisabilities(userId: number, disabilityIds: number[]) {
+        await db.delete(student_disabilities).where(eq(student_disabilities.userId, userId));
+
+        if (!disabilityIds.length) {
+            return;
+        }
+
+        await db.insert(student_disabilities).values(
+            disabilityIds.map((disabilityId) => ({ userId, disabilityId })),
+        );
     }
 
     async update(id: number, data: UpdateUserData) {

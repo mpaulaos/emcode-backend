@@ -20,7 +20,10 @@ class UserService {
             throw new Error('Usuario no encontrado');
         }
         const { passwordHash, ...userData } = user;
-        return userData;
+        const disabilities = user.role === 'student'
+            ? await this.userRepository.findDisabilities(userId)
+            : [];
+        return { ...userData, disabilities };
     }
 
     async register(userData: CreateUserDTO) {
@@ -51,9 +54,18 @@ class UserService {
             throw new Error('Usuario no encontrado');
         }
 
-        const updatedUser = await this.userRepository.update(userId, data);
-        const { passwordHash, ...userData } = updatedUser!;
-        return userData;
+        const { disabilityIds, ...userData } = data as any;
+
+        if (disabilityIds !== undefined && user.role === 'student') {
+            await this.userRepository.setDisabilities(userId, disabilityIds);
+        }
+
+        const updatedUser = await this.userRepository.update(userId, userData);
+        const { passwordHash, ...userResponse } = updatedUser!;
+        const disabilities = user.role === 'student'
+            ? await this.userRepository.findDisabilities(userId)
+            : [];
+        return { ...userResponse, disabilities };
     }
 
     async changePassword(userId: number, data: ChangePasswordDTO) {

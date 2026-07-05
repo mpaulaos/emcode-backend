@@ -24,6 +24,7 @@ export const updateUserProfileSchema = z.object({
     lastName: z.string().min(1, 'El apellido es requerido').max(100, 'El apellido no puede exceder 100 caracteres').optional(),
     phone: z.string().max(20, 'El teléfono no puede exceder 20 caracteres').optional().nullable(),
     profilePicture: z.string().max(500, 'La URL de la foto no puede exceder 500 caracteres').optional().nullable(),
+    disabilityIds: z.array(z.number().int().positive()).optional(),
 });
 
 export type UpdateUserProfileDTO = z.infer<typeof updateUserProfileSchema>;
