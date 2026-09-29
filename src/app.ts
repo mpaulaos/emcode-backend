@@ -5,6 +5,10 @@ import env from '../env';
 
 const app: Application = express();
 
+// Required behind a proxy (Vercel, ngrok) so express-rate-limit sees the real client IP
+// instead of the proxy's. Use the hop count, not `true`, which rate-limit rejects.
+app.set('trust proxy', 1);
+
 app.use(cors({
     origin: env.CORS_ORIGIN,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],

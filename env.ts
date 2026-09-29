@@ -42,6 +42,13 @@ const envSchema = z.object({
     GOOGLE_CLIENT_SECRET: z.string().min(1, 'GOOGLE_CLIENT_SECRET is required'),
     FRONTEND_URL: z.string().url().default('http://localhost:5173'),
     BACKEND_URL: z.string().url().default('http://localhost:3000'),
+
+    BREVO_API_KEY: z.string().startsWith('xkeysib-').optional(),
+    BREVO_SENDER_EMAIL: z.string().email().default('no-reply@emcode.ac.cr'),
+    BREVO_SENDER_NAME: z.string().default('EMCODE'),
+    PASSWORD_RESET_EXPIRES_MINUTES: z.coerce.number().positive().default(15),
+    PASSWORD_RESET_RATE_LIMIT: z.coerce.number().positive().default(isProduction ? 5 : 100),
+    PASSWORD_RESET_RATE_LIMIT_WINDOW_MINUTES: z.coerce.number().positive().default(15),
 });
 
 export type Env = z.infer<typeof envSchema>;

@@ -6,6 +6,7 @@ Backend del sistema educativo EMCODE desarrollado con Node.js, TypeScript, Expre
 
 - Autenticación y autorización con JWT
 - Integración con Google OAuth
+- Reseteo de contraseña por correo con Brevo
 - Gestión de cursos, temas, lecciones y slides
 - Gestión de estudiantes, progreso y matrículas
 - Endpoints para guías, posts y dashboard
@@ -83,6 +84,13 @@ GOOGLE_CLIENT_ID=tu_google_client_id
 GOOGLE_CLIENT_SECRET=tu_google_client_secret
 FRONTEND_URL=http://localhost:5173
 BACKEND_URL=http://localhost:3000
+
+# Envío de correos transaccionales con Brevo
+# Si BREVO_API_KEY queda sin definir en dev, el enlace de reseteo se imprime en consola
+# BREVO_API_KEY=xkeysib-tu_api_key
+BREVO_SENDER_EMAIL=no-reply@emcode.ac.cr
+BREVO_SENDER_NAME=EMCODE
+PASSWORD_RESET_EXPIRES_MINUTES=15
 ```
 
 ## Ejecución en desarrollo
@@ -147,6 +155,8 @@ El seed crea:
 El backend expone las siguientes áreas principales:
 
 - `/api/auth` — autenticación y usuarios
+  - `POST /api/auth/forgot-password` — envía el enlace de reseteo por correo
+  - `POST /api/auth/reset-password` — define la nueva contraseña y devuelve la sesión iniciada
 - `/api/courses` — cursos
 - `/api/topics` — módulos/temas
 - `/api/lessons` — lecciones
@@ -168,6 +178,12 @@ El backend expone las siguientes áreas principales:
 | `GOOGLE_CLIENT_ID` | Client ID de Google OAuth |
 | `GOOGLE_CLIENT_SECRET` | Secret de Google OAuth |
 | `CORS_ORIGIN` | Origen permitido por CORS |
+| `BREVO_API_KEY` | API key de Brevo para el envío de correos transaccionales |
+| `BREVO_SENDER_EMAIL` | Remitente de los correos (debe estar verificado en Brevo) |
+| `BREVO_SENDER_NAME` | Nombre visible del remitente |
+| `PASSWORD_RESET_EXPIRES_MINUTES` | Vigencia del enlace de reseteo de contraseña, en minutos |
+| `PASSWORD_RESET_RATE_LIMIT` | Requests de reseteo por IP y ventana. Default `5` en producción, `100` en dev y test |
+| `PASSWORD_RESET_RATE_LIMIT_WINDOW_MINUTES` | Ventana del rate limit de reseteo, en minutos |
 
 ## Notas de desarrollo
 

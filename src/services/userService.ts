@@ -1,12 +1,20 @@
+import crypto from 'crypto';
 import bcrypt from 'bcrypt';
+import env from '../../env';
 import UserRepository from '../repositories/userRepository';
-import { CreateUserDTO, LoginDTO, UpdateUserProfileDTO, ChangePasswordDTO } from '../schemas/userSchema';
+import PasswordResetRepository from '../repositories/passwordResetRepository';
+import EmailService from './emailService';
+import { CreateUserDTO, LoginDTO, UpdateUserProfileDTO, ChangePasswordDTO, ResetPasswordDTO } from '../schemas/userSchema';
 
 class UserService {
     private userRepository: UserRepository;
+    private passwordResetRepository: PasswordResetRepository;
+    private emailService: EmailService;
 
     constructor() {
         this.userRepository = new UserRepository();
+        this.passwordResetRepository = new PasswordResetRepository();
+        this.emailService = new EmailService();
     }
 
     async getAllUsers() {
@@ -84,6 +92,64 @@ class UserService {
 
         const passwordHash = await bcrypt.hash(data.newPassword, 10);
         await this.userRepository.update(userId, { passwordHash });
+    }
+
+    async requestPasswordReset(email: string) {
+        const user = await this.userRepository.findByEmail(email);
+
+        // Same outcome whether or not the email exists, so the endpoint can't be used
+        // to enumerate which addresses are registered.
+        if (!user || user.isActive === false) {
+            return;
+        }
+
+        // Only the most recent request stays usable
+        await this.passwordResetRepository.deleteByUserId(user.id);
+
+        const token = crypto.randomBytes(32).toString('hex');
+        const expiresAt = new Date(Date.now() + env.PASSWORD_RESET_EXPIRES_MINUTES * 60 * 1000);
+
+        await this.passwordResetRepository.create({
+            userId: user.id,
+            tokenHash: this.hashResetToken(token),
+            expiresAt,
+        });
+
+        const resetUrl = `${env.FRONTEND_URL}/reset-password?token=${token}`;
+
+        await this.emailService.sendPasswordResetEmail({
+            to: user.email,
+            name: user.firstName,
+            resetUrl,
+        });
+    }
+
+    async resetPassword(data: ResetPasswordDTO) {
+        const record = await this.passwordResetRepository.findValidByTokenHash(
+            this.hashResetToken(data.token),
+            new Date(),
+        );
+
+        if (!record) {
+            throw new Error('Token inválido o expirado');
+        }
+
+        const passwordHash = await bcrypt.hash(data.newPassword, 10);
+        const user = await this.userRepository.update(record.userId, { passwordHash });
+
+        if (!user) {
+            throw new Error('Usuario no encontrado');
+        }
+
+        await this.passwordResetRepository.markUsed(record.id);
+        await this.passwordResetRepository.deleteByUserId(record.userId);
+
+        const { passwordHash: _, ...userData } = user;
+        return userData as typeof userData & { role: string | null };
+    }
+
+    private hashResetToken(token: string) {
+        return crypto.createHash('sha256').update(token).digest('hex');
     }
 }
 
