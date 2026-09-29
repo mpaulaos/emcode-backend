@@ -94,6 +94,43 @@ class UserController {
             res.status(500).json({ message: 'Error interno del servidor' });
         }
     };
+
+    forgotPassword = async (req: Request, res: Response) => {
+        try {
+            await this.userService.requestPasswordReset(req.body.email);
+        } catch (error) {
+            console.error('Error al solicitar reseteo de contraseña:', error);
+            return res.status(502).json({
+                message: 'No pudimos enviar el correo. Intentá de nuevo en unos minutos.',
+            });
+        }
+
+        res.json({
+            message: 'Si el email está registrado, te enviamos un enlace para restablecer tu contraseña.',
+        });
+    };
+
+    resetPassword = async (req: Request, res: Response) => {
+        try {
+            const user = await this.userService.resetPassword(req.body);
+            const token = signToken({
+                id: user.id,
+                email: user.email,
+                role: user.role ?? 'student',
+                firstName: user.firstName,
+                lastName: user.lastName,
+            });
+            res.json({ token, user });
+        } catch (error) {
+            if (error instanceof Error && error.message === 'Token inválido o expirado') {
+                return res.status(400).json({ message: 'El enlace es inválido o ya venció' });
+            }
+            if (error instanceof Error && error.message === 'Usuario no encontrado') {
+                return res.status(404).json({ message: 'Usuario no encontrado' });
+            }
+            res.status(500).json({ message: 'Error interno del servidor' });
+        }
+    };
 }
 
 export default UserController;

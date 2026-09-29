@@ -25,6 +25,16 @@ export const users = pgTable('users', {
 });
 
 
+export const password_reset_tokens = pgTable('password_reset_tokens', {
+    id: serial('id').primaryKey(),
+    userId: integer('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+    tokenHash: varchar('token_hash', { length: 64 }).notNull().unique(),
+    expiresAt: timestamp('expires_at', { mode: 'date' }).notNull(),
+    usedAt: timestamp('used_at', { mode: 'date' }),
+    createdAt: timestamp('created_at', { mode: 'date' }).defaultNow(),
+});
+
+
 export const courses = pgTable('courses', {
     id: serial('id').primaryKey(),
     creatorId: integer('user_id').notNull().references(() => users.id),
@@ -159,6 +169,15 @@ export const userRelations = relations(users, ({ many }) => ({
     enrrollments: many(enrrollments),
     progress: many(student_progress),
     quizAttempts: many(quizAttempts),
+    passwordResetTokens: many(password_reset_tokens),
+}));
+
+
+export const passwordResetTokenRelations = relations(password_reset_tokens, ({ one }) => ({
+    user: one(users, {
+        fields: [password_reset_tokens.userId],
+        references: [users.id],
+    }),
 }));
 
 
