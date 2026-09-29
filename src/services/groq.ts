@@ -18,7 +18,7 @@ export async function getChatReply(
   messages: { role: "user" | "assistant"; content: string }[]
 ): Promise<string> {
   const completion = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
+    model: "openai/gpt-oss-120b",
     max_tokens: 1000,
     messages: [
       { role: "system", content: SYSTEM_PROMPT },
@@ -47,7 +47,7 @@ export async function getImageDescription(
   imageBase64: string
 ): Promise<string> {
   const completion = await groqVision.chat.completions.create({
-    model: "meta-llama/llama-4-scout-17b-16e-instruct",
+    model: "qwen/qwen3.8-27b",
     max_tokens: 500,
     messages: [
       { role: "system", content: VISION_SYSTEM_PROMPT },
